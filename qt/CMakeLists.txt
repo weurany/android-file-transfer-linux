@@ -62,8 +62,14 @@ if (BUILD_QT_UI)
 	add_definitions(${QT_DEFINITIONS})
 	include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-	add_executable(android-file-transfer ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS} ${RESOURCES})
+	add_executable(android-file-transfer MACOSX_BUNDLE ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS} ${RESOURCES})
 	target_link_libraries(android-file-transfer ${EXTRA_QT_LINK} ${MTP_LIBRARIES})
+
+	add_custom_command( TARGET android-file-transfer
+		COMMAND pwd
+		COMMAND cp -rf ../../dylib_change.sh .
+		COMMAND sudo sh dylib_change.sh
+	)	
 
   if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/android-file-transfer DESTINATION bin)
